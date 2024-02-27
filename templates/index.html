@@ -1,13 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Upload CSV and Download PDFs</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Upload CSV File</h1>
     <form action="/" method="post" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="Generate PDFs">
+      <input type="file" name="file" />
+      <input type="submit" value="Generate PDFs" />
     </form>
-</body>
+    {% with messages = get_flashed_messages() %} {% if messages %} {% for
+    message in messages %}
+    <div style="color: green">{{ message }}</div>
+    {% endfor %} {% endif %} {% endwith %}
+  </body>
 </html>

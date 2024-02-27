@@ -25,4 +25,4 @@ def csv_to_json(csv_file_path, json_file_path):
         json.dump(data, jsonfile, indent=4)
 
 # Replace 'input.csv' and 'output.json' with your actual file paths
-# csv_to_json('input.csv', 'output.json')
+# csv_to_json('sample_input.csv', 'output.json')

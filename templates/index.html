@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Upload File and Specify Output Directory</h2>
+
+<form id="uploadForm" method="post" enctype="multipart/form-data">
+  Select CSV to upload:
+  <input type="file" name="file" id="file"><br><br>
+  <input type="submit" value="Generate PDFs">
+</form>
+
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+    
+    fetch('/upload', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            window.location.href = data.downloadUrl;  // Trigger the download
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+</script>
+
+</body>
+</html>

@@ -7,14 +7,15 @@ def csv_to_json(csv_file_path, json_file_path):
         with open(csv_file_path, mode='r', encoding='utf-8') as csvfile:
             csv_reader = csv.DictReader(csvfile)
             for row in csv_reader:
-                kids = row['kids'].split(',')
+                names = row['names'].split(',')
                 dobs = row['dob'].split(',')
-                for kid, dob in zip(kids, dobs):
+                for name, dob in zip(names, dobs):
                     kid_data = {
-                        'kid': kid.strip(),
+                        'start_date': row['start_date'],
+                        'name': name.strip(),
                         'parent': row['parent'],
                         'address': row['address'],
-                        'dob': dob.strip()
+                        'dob': dob.strip(),
                     }
                     data.append(kid_data)
     except KeyError as e:
@@ -25,4 +26,4 @@ def csv_to_json(csv_file_path, json_file_path):
         json.dump(data, jsonfile, indent=4)
 
 # Replace 'input.csv' and 'output.json' with your actual file paths
-# csv_to_json('sample_input.csv', 'output.json')
+csv_to_json('sample_input.csv', 'output.json')

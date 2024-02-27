@@ -12,17 +12,20 @@ def create_pdfs_from_json(json_file_path, output_directory):
         data = json.load(file)
 
     for entry in data:
-        kid = entry['kid']
+        start_date = entry['start_date']
+        participant = entry['participant']
         parent = entry['parent']
         address = entry['address']
 
         # Create a PDF file for each entry in the specified output directory
         pdf_file_path = os.path.join(output_directory, f"{kid}_form.pdf")
         c = canvas.Canvas(pdf_file_path, pagesize=letter)
-        c.drawString(100, 750, f"Kid: {kid}")
+        c.drawText(100, 800, f"Lurgan & Tandragee Ju-Jitsu Club")
+        c.drawString(100, 800, f"Start Date: {start_date}")
+        c.drawString(100, 750, f"{participant}")
         c.drawString(100, 730, f"Parent: {parent}")
         c.drawString(100, 710, f"Address: {address}")
         c.save()
 
 # Example usage
-# create_pdfs_from_json('output.json', 'pdfs')
+create_pdfs_from_json('output.json', 'pdfs')

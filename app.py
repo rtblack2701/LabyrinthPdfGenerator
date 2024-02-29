@@ -1,6 +1,6 @@
 from flask import Flask, request, send_from_directory, render_template
 import os
-from csv_to_json import csv_to_json
+from xlsx_to_json import csv_to_json
 from pdf_gen import create_pdfs_from_json
 import shutil
 import tempfile

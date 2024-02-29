@@ -12,3 +12,7 @@ Python application designed to allow one parent/guardian to fill out a single me
         - `generate_induction_pdfs('sample_input.csv', 'sample_output.json', 'pdfs')`
     - `python ~/path/to/LabyrinthPdfGenerator/scripts/main.py`
     - Inspect the generated pdfs in the `pdfs` directory
+
+## Usage
+
+Run the application locally and 

@@ -1,5 +1,5 @@
-from csv_to_json import csv_to_json
-from pdf_gen import create_pdfs_from_json
+from xlsx_to_json import csv_to_json
+from pdf_filler import create_pdfs_from_json
 
 
 def generate_induction_pdfs(input_csv, output_csv, output_pdf_directory):

@@ -17,6 +17,7 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         start_date = entry['start_date']
         name = entry['name']
         parent = entry['parent']
+        relationship = entry['relationship']
         address = entry['address']
         dob = entry['dob']
 
@@ -36,13 +37,13 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         # Create a packet for new PDF with reportlab
         packet = io.BytesIO()
         can = canvas.Canvas(packet, pagesize=letter)
-        can.drawString(500, 2000, f"Lurgan & Tandragee Ju-Jitsu Club")
-        can.drawString(100, 800, f"Start Date: {start_date}")
+        can.drawString(85, 750, f"Lurgan & Tandragee Ju-Jitsu Club")
+        can.drawString(330, 750, f"{start_date}")
         can.drawString(75, 710, f"{name}")
-        can.drawString(100, 730, f"Parent: {parent}")
+        can.drawString(165, 615, f"{parent}({relationship})")
         can.drawString(85, 692, f"{address}")
         can.drawString(445, 710, f"{dob}")
-        can.setFont("Courier-Oblique", 12)
+        can.setFont("Mistral", 12)
         can.drawString(270, 95, f"William Watson")
         can.save()
 

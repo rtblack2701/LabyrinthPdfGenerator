@@ -30,7 +30,9 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         email = entry['email']
         emergency_contact_phone = entry['emergency_contact_phone']
         relationship = entry['relationship']
-        address = entry['address']
+        address_line_1 = entry['address']['address_line_1']
+        town = entry['address']['town']
+        postcode = entry['address']['postcode']
         # Consent, background, and media release
         media_consent = entry['media_consent']
         convicted = entry['convicted']
@@ -38,6 +40,7 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         source = entry['source']
         # Signature
         signed = entry['signed']
+
         
 
         # Read the template PDF
@@ -62,17 +65,18 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         can.drawString(465, 93, f"{submission_date}") # Signed by instructor date
         can.drawString(330, 750, f"{start_date}")
         can.drawString(75, 710, f"{full_name}")
-        can.drawString(445, 710, f"{date_of_birth}")
+        can.drawString(440, 710, f"{date_of_birth}")
         can.drawString(360, 570, f"{medical_conditions}")
         #can.drawString(85, 665, f"{medical_checklist}")
         can.drawString(430, 488, f"{allergy}")
-        #can.drawString(85, 620, f"{other}")
+        can.drawString(80, 470, f"{other}")
         can.drawString(160, 614, f"{contact_name} ({relationship})")
         can.drawString(440, 692, f"{phone}")
         can.drawString(440, 674, f"{mobile}")
         can.drawString(110, 656, f"{email}")
         can.drawString(440, 614, f"{emergency_contact_phone}")
-        #can.drawString(85, 692, f"{address}")
+        can.drawString(85, 692, f"{address_line_1}, {town}")
+        can.drawString(310, 674, f"{postcode}")
         #can.drawString(85, 570, f"{media_consent}")
         #can.drawString(85, 547, f"{convicted}")
         can.drawString(150, 315, f"{conviction_details}")

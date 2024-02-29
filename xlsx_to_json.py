@@ -31,8 +31,6 @@ def clean_data(input_xlsx_file, output_json_file):
             }
             key_json_data.append(updated_entry)
         return key_json_data
-    
-    def update_value_names(data):
 
     def separate_instances(data):
         separated_data = []
@@ -67,24 +65,36 @@ def clean_data(input_xlsx_file, output_json_file):
         return separated_data
     
     def format_dates(data):
-        formatted_data = []
+        date_formatted_json_data = []
         for entry in data:
             for key, value in entry.items():
-                if "date" in key and value:  # Assuming date fields contain 'date' in their name
-                    # Try to parse and format the date
-                    try:
-                        if isinstance(value, str):
-                            # Attempt to detect format and convert
-                            date_obj = datetime.strptime(value, "%d/%m/%Y")
-                        elif isinstance(value, datetime):
-                            date_obj = value
-                        formatted_date = date_obj.strftime("%d/%m/%Y")
+                if "date" in key and isinstance(value, str):  # Check if the field likely contains a date and is a string
+                    # Initialize formatted_date as None
+                    formatted_date = None
+                    
+                    # List of known date formats to try
+                    date_formats = ["%b %d, %Y", "%d/%m/%Y", "%Y-%m-%d"]  # Add other known formats as needed
+                    
+                    # Try parsing the date with each known format
+                    for date_format in date_formats:
+                        try:
+                            date_obj = datetime.strptime(value, date_format)
+                            formatted_date = date_obj.strftime("%d/%m/%Y")
+                            break  # Exit the loop on successful parsing
+                        except ValueError:
+                            pass  # Try the next format if parsing fails
+                    
+                    # Update the entry with the formatted date if parsing was successful
+                    if formatted_date:
                         entry[key] = formatted_date
-                    except ValueError:
-                        # Handle cases where the date format is already correct or unrecognized
-                        pass
-            formatted_data.append(entry)
-        return formatted_data
+                    else:
+                        # Log or handle dates that couldn't be formatted
+                        print(f"Could not format date for {key}: {value}. Unrecognized format.")
+            
+            date_formatted_json_data.append(entry)
+        return date_formatted_json_data
+
+
     
     def handle_multiline_medical_checklist(data):
         multiline_json_data = []
@@ -124,6 +134,32 @@ def clean_data(input_xlsx_file, output_json_file):
                     new_entry[key] = value
             phone_json_data.append(new_entry)
         return phone_json_data
+    
+    def split_address(data):
+        address_json_data = []
+        for entry in data:
+            new_entry = entry.copy()  # Make a copy to avoid modifying the original entry directly
+            address = new_entry.get('address', '')
+            if ',' in address:
+                # Split the address into AddressLine1 and postcode
+                address_parts = address.rsplit(',', 1)  # Split from the right to ensure we only split on the last comma
+                address_line_1, postcode = address_parts[0].strip(), address_parts[1].strip()
+                
+                # Further split AddressLine1 to separate the town, which is assumed to be the last word
+                if ' ' in address_line_1:
+                    *address_line_1_parts, town = address_line_1.rsplit(' ', 1)
+                    address_line_1 = ' '.join(address_line_1_parts)
+                else:
+                    town = ''  # In case there's no identifiable town component
+                
+                # Create a nested structure for the address with town included
+                new_entry['address'] = {
+                    'address_line_1': address_line_1,
+                    'town': town,
+                    'postcode': postcode
+                }
+            address_json_data.append(new_entry)
+        return address_json_data
 
 
 
@@ -135,9 +171,10 @@ def clean_data(input_xlsx_file, output_json_file):
     multiline_json_data = handle_multiline_medical_checklist(date_formatted_json_data)
     uppercase_json_data = uppercase_string_fields(multiline_json_data)
     phone_json_data = ensure_leading_zero_for_phones(uppercase_json_data)
+    address_json_data = split_address(phone_json_data)
 
     with open(output_json_file, 'w') as file:
-        json.dump(phone_json_data, file, indent=4)
+        json.dump(address_json_data, file, indent=4)
 
 # Specify the actual input and output file paths when using the function.
 clean_data('sample_input.xlsx', 'output.json')

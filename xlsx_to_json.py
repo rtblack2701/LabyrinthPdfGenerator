@@ -112,8 +112,8 @@ def clean_data(input_xlsx_file, output_json_file):
         for entry in data:
             new_entry = {}
             for key, value in entry.items():
-                # Check if the field is a string and the key is not 'email'
-                if isinstance(value, str) and key != 'email':
+                # Check if the field is a string and the key is not 'email' or 'signed'
+                if isinstance(value, str) and key != 'email' and key != 'signed':
                     new_entry[key] = value.upper()  # Convert to uppercase
                 else:
                     new_entry[key] = value

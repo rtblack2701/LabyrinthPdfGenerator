@@ -77,7 +77,20 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         can.drawString(440, 614, f"{emergency_contact_phone}")
         can.drawString(85, 692, f"{address_line_1}, {town}")
         can.drawString(310, 674, f"{postcode}")
-        #can.drawString(85, 570, f"{media_consent}")
+
+        
+        # Conditional rendering for media consent
+        if media_consent.upper() == "YES":
+            can.drawString(317, 357, "X")  
+        elif media_consent.upper() == "NO (IF YOU DO NOT CONSENT PLEASE MAKE YOUR INSTRUCTOR AWARE OF THIS)":
+            can.drawString(364, 357, "X")  
+
+        # Conditional rendering for conviction
+        if convicted.upper() == "YES":
+            can.drawString(317, 331, "X")  
+        elif convicted.upper() == "NO":
+            can.drawString(364, 331, "X") 
+        
         #can.drawString(85, 547, f"{convicted}")
         can.drawString(150, 315, f"{conviction_details}")
         can.drawString(320, 228, f"{source}")

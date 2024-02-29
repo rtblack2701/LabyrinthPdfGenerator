@@ -14,18 +14,37 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         data = json.load(file)
 
     for entry in data:
+        submission_date = entry['submission_date']
         start_date = entry['start_date']
-        name = entry['name']
-        parent = entry['parent']
+        # Participant-specific details
+        full_name = entry['full_name']
+        date_of_birth = entry['date_of_birth']
+        medical_conditions = entry['medical_conditions']
+        medical_checklist = entry['medical_checklist']
+        allergy = entry['allergy']
+        other = entry['other']
+        # Parent/guardian details + contact information
+        contact_name = entry['contact_name']
+        phone = entry['phone']
+        mobile = entry['mobile']
+        email = entry['email']
+        emergency_contact_phone = entry['emergency_contact_phone']
         relationship = entry['relationship']
         address = entry['address']
-        dob = entry['dob']
+        # Consent, background, and media release
+        media_consent = entry['media_consent']
+        convicted = entry['convicted']
+        conviction_details = entry['conviction_details']
+        source = entry['source']
+        # Signature
+        signed = entry['signed']
+        
 
         # Read the template PDF
         template_pdf = PdfReader(template_path)
 
         # Create a PDF file for each entry
-        pdf_file_path = os.path.join(output_directory, f"{name}_form.pdf")
+        pdf_file_path = os.path.join(output_directory, f"{full_name}_form.pdf")
         
         # Initialize a PdfWriter object for writing to a new PDF
         writer = PdfWriter()
@@ -37,14 +56,30 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         # Create a packet for new PDF with reportlab
         packet = io.BytesIO()
         can = canvas.Canvas(packet, pagesize=letter)
-        can.drawString(85, 750, f"Lurgan & Tandragee Ju-Jitsu Club")
+        can.setFont("Helvetica", 9)
+        can.drawString(85, 750, f"LURGAN & TANDRAGEE JU-JITSU CLUB")
+        can.drawString(430, 288, f"{submission_date}") # Signed by parent/guardian date
+        can.drawString(465, 93, f"{submission_date}") # Signed by instructor date
         can.drawString(330, 750, f"{start_date}")
-        can.drawString(75, 710, f"{name}")
-        can.drawString(165, 615, f"{parent}({relationship})")
-        can.drawString(85, 692, f"{address}")
-        can.drawString(445, 710, f"{dob}")
-        can.setFont("Mistral", 12)
-        can.drawString(270, 95, f"William Watson")
+        can.drawString(75, 710, f"{full_name}")
+        can.drawString(445, 710, f"{date_of_birth}")
+        can.drawString(360, 570, f"{medical_conditions}")
+        #can.drawString(85, 665, f"{medical_checklist}")
+        can.drawString(430, 488, f"{allergy}")
+        #can.drawString(85, 620, f"{other}")
+        can.drawString(160, 614, f"{contact_name} ({relationship})")
+        can.drawString(440, 692, f"{phone}")
+        can.drawString(440, 674, f"{mobile}")
+        can.drawString(110, 656, f"{email}")
+        can.drawString(440, 614, f"{emergency_contact_phone}")
+        #can.drawString(85, 692, f"{address}")
+        #can.drawString(85, 570, f"{media_consent}")
+        #can.drawString(85, 547, f"{convicted}")
+        can.drawString(150, 315, f"{conviction_details}")
+        can.drawString(320, 228, f"{source}")
+        #can.drawString(80, 290, f"{signed}")
+        can.setFont("Helvetica", 16)
+        can.drawString(260, 95, f"William Watson")
         can.save()
 
         # Move to the beginning of the StringIO buffer

@@ -7,10 +7,6 @@ def clean_data(input_xlsx_file, output_json_file):
         df = pd.read_excel(file_path)
         return df.to_dict(orient='records')
 
-    def to_snake_case(s):
-        s = s.replace(" ", "_")  # Ensure spaces become single underscores
-        return ''.join(['_' + c.lower() if c.isupper() else c for c in s]).lstrip('_').replace('__', '_')
-
     def convert_keys_to_snake_case(data):
         snake_case_data = []
         for entry in data:
@@ -26,16 +22,17 @@ def clean_data(input_xlsx_file, output_json_file):
             snake_case_data.append(snake_case_entry)
         return snake_case_data
 
-    
-    def update_header_names(data):
-        updated_data = []
+    def update_key_names(data):
+        key_json_data = []
         for entry in data:
             updated_entry = {
                 key.replace('please_state_any_medical_conditions_which_may_be_aggravated_by_exercise', 'medical_conditions')
                    .replace('please_check_any_of_the_following_that_apply', 'medical_checklist'): value for key, value in entry.items()
             }
-            updated_data.append(updated_entry)
-        return updated_data
+            key_json_data.append(updated_entry)
+        return key_json_data
+    
+    def update_value_names(data):
 
     def separate_instances(data):
         separated_data = []
@@ -132,8 +129,8 @@ def clean_data(input_xlsx_file, output_json_file):
 
     json_data = xlsx_to_json(input_xlsx_file)
     snake_case_json_data = convert_keys_to_snake_case(json_data)
-    updated_json_data = update_header_names(snake_case_json_data)
-    separated_json_data = separate_instances(updated_json_data)
+    key_json_data = update_key_names(snake_case_json_data)
+    separated_json_data = separate_instances(key_json_data)
     date_formatted_json_data = format_dates(separated_json_data)
     multiline_json_data = handle_multiline_medical_checklist(date_formatted_json_data)
     uppercase_json_data = uppercase_string_fields(multiline_json_data)

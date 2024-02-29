@@ -1,7 +1,7 @@
 import json
 
 # Load the JSON data from the file
-with open('jotform_submissions.json', 'r') as file:
+with open('jotform_api/data_files/jotform_submissions.json', 'r') as file:
     submissions_data = json.load(file)
 
 # Filter only active submissions
@@ -11,15 +11,24 @@ def build_detailed_objects(submissions):
     detailed_objects = []
 
     for submission in submissions:
+        start_date_info = submission['answers']['5']['answer']
+        start_date = start_date_info.get('prettyFormat', 
+                                         f"{start_date_info.get('year', '')}-{start_date_info.get('month', '')}-{start_date_info.get('day', '')}")
+        
+        address_info = submission['answers']['71']['answer']
+        address = address_info.get('prettyFormat', f"{address_info.get('addr_line1', '')}, {address_info.get('city', '')}")
+        postcode = address_info.get('prettyFormat', f"{address_info.get('postal', '')}")
+       
         # Extract common fields for the submission
         common_fields = {
             "submission_id": submission['id'],
-            "start_date": submission['answers']['5'].get('prettyFormat', ''),
+            "start_date": start_date,
             "email": submission['answers']['12'].get('answer', ''),
             "contact_name": submission['answers']['14'].get('answer', ''),
             "convicted_details": submission['answers']['35'].get('answer', ''),
             "source": submission['answers']['70'].get('answer', ''),
-            "address": submission['answers']['71'].get('prettyFormat', ''),
+            "address": address,
+            "postcode": postcode,
             "phone": submission['answers']['72'].get('answer', ''),
             "relationship": submission['answers']['75'].get('answer', ''),
             "emergency_contact_phone": submission['answers']['76'].get('answer', ''),
@@ -50,7 +59,7 @@ def build_detailed_objects(submissions):
 detailed_objects = build_detailed_objects(active_submissions)
 
 # Write the detailed objects to a new JSON file
-output_file_path = 'processed_submissions.json'
+output_file_path = 'jotform_api/data_files/processed_submissions.json'
 with open(output_file_path, 'w') as outfile:
     json.dump(detailed_objects, outfile, indent=4)
 

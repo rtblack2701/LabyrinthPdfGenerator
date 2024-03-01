@@ -72,8 +72,6 @@ def clean_data(input_json_file, output_json_file):
             process_entry(submission)
         return data
     
-    
-    
     exceptions = {'email', 'signed', 'signature_image_path'}
     date_fields = {'created_at', 'start_date', 'participant.dob'}
     
@@ -85,4 +83,4 @@ def clean_data(input_json_file, output_json_file):
     with open(output_json_file, 'w') as file:
         json.dump(format_date_fields, file, indent=4)
 
-clean_data('jotform_api/data_files/processed_submissions.json', 'jotform_api/data_files/cleaned_sub_data.json')
+clean_data('jotform_api/data_files/built_form_submission.json', 'jotform_api/data_files/cleaned_submission_data.json')

@@ -110,9 +110,6 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         can.drawString(150, 315, f"{convicted_details}")
         can.drawString(320, 228, f"{source}")
         
-        # Instructor signature
-        can.setFont("Helvetica", 15)
-        can.drawString(260, 95, "William Watson")  # Example usage with custom font
         can.save()
         
         # Move to the beginning of the StringIO buffer
@@ -129,4 +126,4 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
             writer.write(output_pdf)
 
 # Example usage
-create_pdfs_from_json('jotform_api/data_files/cleaned_sub_data.json', 'pdfs', 'templates/InductionForm.pdf')
+create_pdfs_from_json('jotform_api/data_files/cleaned_submission_data.json', 'assets/pdfs/pre_signed', 'templates/InductionForm.pdf')

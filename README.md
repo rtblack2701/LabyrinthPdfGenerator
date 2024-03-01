@@ -15,4 +15,22 @@ Python application designed to allow one parent/guardian to fill out a single me
 
 ## Usage
 
-Run the application locally and 
+### First-time use
+Authenticate with Jotform API:
+`python -m jotform_api/api_endpoints/authentication`
+
+#### Then:
+1. Get the form submission data:
+    `python -m jotform_api.api_endpoints.get_form_submissions`
+2. Build the JSON file:
+    `python scripts/object_builder`
+3. Clean the JSON file:
+    `python scripts/api_data_cleaner`
+4. Generate the PDFs:
+    `python scripts/pdf_filler`
+5. Overlay the PDFs with parent/guardian and coach signatures:
+    `python -m scripts/signature_overlay`
+
+
+
+// TODO: Add better messaging and error handling to api_data_cleaner.py

@@ -23,7 +23,7 @@ if response.status_code == 200:
     print("Request successful. Data received:")
     
     # Define the file path
-    file_path = 'jotform_api/data_files/jotform_submissions.json'
+    file_path = 'jotform_api/data_files/jotform_api_submissions.json'
     
     # Write the data to a JSON file
     with open(file_path, 'w') as json_file:

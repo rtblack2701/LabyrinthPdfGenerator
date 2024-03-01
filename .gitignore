@@ -160,6 +160,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-pdfs/*
 archive/*
-jotform_api/data_files/*
+jotform_api/data_files/
+assets/

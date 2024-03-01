@@ -3,7 +3,7 @@ import requests
 import os
 
 # Define a directory to save the signature images
-signature_images_directory = 'jotform_api/signature_images'
+signature_images_directory = 'assets/signature_images'
 if not os.path.exists(signature_images_directory):
     os.makedirs(signature_images_directory)
 
@@ -85,7 +85,7 @@ def build_detailed_objects(submissions):
     return detailed_objects
 
 # Load the JSON data from the file
-with open('jotform_api/data_files/jotform_submissions.json', 'r') as file:
+with open('jotform_api/data_files/jotform_api_submissions.json', 'r') as file:
     submissions_data = json.load(file)
 
 # Filter only active submissions
@@ -95,7 +95,7 @@ active_submissions = [submission for submission in submissions_data['content'] i
 detailed_objects = build_detailed_objects(active_submissions)
 
 # Write the detailed objects to a new JSON file
-output_file_path = 'jotform_api/data_files/processed_submissions.json'
+output_file_path = 'jotform_api/data_files/built_form_submission.json'
 with open(output_file_path, 'w') as outfile:
     json.dump(detailed_objects, outfile, indent=4)
 

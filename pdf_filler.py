@@ -14,32 +14,31 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         data = json.load(file)
 
     for entry in data:
-        submission_date = entry['submission_date']
+        submission_date = entry['created_at']
         start_date = entry['start_date']
         # Participant-specific details
-        full_name = entry['full_name']
-        date_of_birth = entry['date_of_birth']
-        medical_conditions = entry['medical_conditions']
-        medical_checklist = entry['medical_checklist']
-        allergy = entry['allergy']
-        other = entry['other']
+        full_name = entry['participant'][0]['full_name']
+        date_of_birth = entry['participant'][0]['dob']
+        medical_condition = entry['participant'][0]['medical_condition']
+        # medical_checklist = entry['medical_checklist']
+        allergy = entry['participant'][0]['allergy']
+        other_medical = entry['participant'][0]['other_medical']
         # Parent/guardian details + contact information
         contact_name = entry['contact_name']
         phone = entry['phone']
         mobile = entry['mobile']
         email = entry['email']
         emergency_contact_phone = entry['emergency_contact_phone']
-        relationship = entry['relationship']
-        address_line_1 = entry['address']['address_line_1']
-        town = entry['address']['town']
-        postcode = entry['address']['postcode']
+        relationship = entry['relationship'] 
+        address = entry['address']
+        postcode = entry['postcode']
         # Consent, background, and media release
-        media_consent = entry['media_consent']
+        media_consent = entry['consent']
         convicted = entry['convicted']
-        conviction_details = entry['conviction_details']
+        convicted_details = entry['convicted_details']
         source = entry['source']
         # Signature
-        signed = entry['signed']
+        # signed = entry['signed']
 
         
 
@@ -66,16 +65,17 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         can.drawString(330, 750, f"{start_date}")
         can.drawString(75, 710, f"{full_name}")
         can.drawString(440, 710, f"{date_of_birth}")
-        can.drawString(360, 570, f"{medical_conditions}")
-        #can.drawString(85, 665, f"{medical_checklist}")
+        can.drawString(360, 570, f"{medical_condition}")
+        # can.drawString(85, 665, f"{medical_checklist}")
         can.drawString(430, 488, f"{allergy}")
-        can.drawString(80, 470, f"{other}")
-        can.drawString(160, 614, f"{contact_name} ({relationship})")
+        can.drawString(80, 470, f"{other_medical}")
+        can.drawString(160, 614, f"{contact_name} ({relationship})") # Emergency contact relationship
+        can.drawString(455, 270, f"{relationship}") # Declaration of relationship
         can.drawString(440, 692, f"{phone}")
         can.drawString(440, 674, f"{mobile}")
         can.drawString(110, 656, f"{email}")
         can.drawString(440, 614, f"{emergency_contact_phone}")
-        can.drawString(85, 692, f"{address_line_1}, {town}")
+        can.drawString(85, 692, f"{address}")
         can.drawString(310, 674, f"{postcode}")
 
         can.setFont("Helvetica", 15)
@@ -92,8 +92,7 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
             can.drawString(362, 329, "X") 
         
         can.setFont("Helvetica", 9)
-        #can.drawString(85, 547, f"{convicted}")
-        can.drawString(150, 315, f"{conviction_details}")
+        can.drawString(150, 315, f"{convicted_details}")
         can.drawString(320, 228, f"{source}")
         #can.drawString(80, 290, f"{signed}")
         can.setFont("Helvetica", 16)
@@ -114,4 +113,4 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
             writer.write(output_pdf)
 
 # Example usage
-create_pdfs_from_json('output.json', 'pdfs', 'templates/InductionForm.pdf')
+create_pdfs_from_json('jotform_api/data_files/cleaned_sub_data.json', 'pdfs', 'templates/InductionForm.pdf')

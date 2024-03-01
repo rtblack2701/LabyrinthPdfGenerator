@@ -22,6 +22,7 @@ def build_detailed_objects(submissions):
         # Extract common fields for the submission
         common_fields = {
             "submission_id": submission['id'],
+            "created_at": submission['created_at'],
             "start_date": start_date,
             "email": submission['answers']['12'].get('answer', ''),
             "contact_name": submission['answers']['14'].get('answer', ''),
@@ -34,7 +35,8 @@ def build_detailed_objects(submissions):
             "emergency_contact_phone": submission['answers']['76'].get('answer', ''),
             "mobile": submission['answers']['78'].get('answer', ''),
             "consent": submission['answers']['79'].get('answer', ''),
-            "convicted": submission['answers']['80'].get('answer', '')
+            "convicted": submission['answers']['80'].get('answer', ''),
+            "signed": submission['answers']['36'].get('answer', ""),
         }
 
         # Initialize three objects for the participants
@@ -42,12 +44,22 @@ def build_detailed_objects(submissions):
         
         for key, value in submission['answers'].items():
             if 'name' in value:
-                if value['name'].startswith('p1_'):
-                    objects[0][value['name']] = value.get('answer', '')
-                elif value['name'].startswith('p2_'):
-                    objects[1][value['name']] = value.get('answer', '')
-                elif value['name'].startswith('p3_'):
-                    objects[2][value['name']] = value.get('answer', '')
+                field_name = value['name']
+                if field_name.startswith('p') and 'dob' in field_name:
+                    # Extract and format the dob field
+                    dob = value.get('answer', {})
+                    formatted_dob = f"{dob.get('day', '')}/{dob.get('month', '')}/{dob.get('year', '')}"
+                    participant_index = int(field_name[1]) - 1  # Assuming 'p1_' maps to index 0
+                    objects[participant_index][field_name] = formatted_dob
+                else:
+                    # Handle other p{i}_ fields
+                    if field_name.startswith('p1_'):
+                        objects[0][field_name] = value.get('answer', '')
+                    elif field_name.startswith('p2_'):
+                        objects[1][field_name] = value.get('answer', '')
+                    elif field_name.startswith('p3_'):
+                        objects[2][field_name] = value.get('answer', '')
+
         
         detailed_objects.extend(objects)
 

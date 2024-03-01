@@ -1,6 +1,7 @@
 [
     {
         "submission_id": "5850531572813929370",
+        "created_at": "2024-02-29 16:59:18",
         "start_date": "2024-03-14",
         "email": "my@mail.com",
         "contact_name": "Emmet foster",
@@ -14,13 +15,9 @@
         "mobile": "07788777999",
         "consent": "No (If you do not consent please make your instructor aware of this)",
         "convicted": "No",
+        "signed": "https://www.jotform.com/uploads/lurganjujitsu/240582874730360/5850531572813929370/5850531572813929370_signature_36.png",
         "p1_full_name": "Ben foster",
-        "p1_dob": {
-            "day": "04",
-            "month": "06",
-            "year": "2015",
-            "datetime": "2015-06-04 00:00:00"
-        },
+        "p1_dob": "04/06/2015",
         "p1_medical_condition": "no meds",
         "p1_medical_checklist": [
             "Heart Trouble",
@@ -44,6 +41,7 @@
     },
     {
         "submission_id": "5850531572813929370",
+        "created_at": "2024-02-29 16:59:18",
         "start_date": "2024-03-14",
         "email": "my@mail.com",
         "contact_name": "Emmet foster",
@@ -57,13 +55,9 @@
         "mobile": "07788777999",
         "consent": "No (If you do not consent please make your instructor aware of this)",
         "convicted": "No",
+        "signed": "https://www.jotform.com/uploads/lurganjujitsu/240582874730360/5850531572813929370/5850531572813929370_signature_36.png",
         "p2_full_name": "britney foster",
-        "p2_dob": {
-            "day": "16",
-            "month": "11",
-            "year": "2012",
-            "datetime": "2012-11-16 00:00:00"
-        },
+        "p2_dob": "16/11/2012",
         "p2_medical_condition": "mo med p2",
         "p2_medical_checklist": [
             "Chest Pains",
@@ -74,6 +68,7 @@
     },
     {
         "submission_id": "5850531572813929370",
+        "created_at": "2024-02-29 16:59:18",
         "start_date": "2024-03-14",
         "email": "my@mail.com",
         "contact_name": "Emmet foster",
@@ -87,13 +82,9 @@
         "mobile": "07788777999",
         "consent": "No (If you do not consent please make your instructor aware of this)",
         "convicted": "No",
+        "signed": "https://www.jotform.com/uploads/lurganjujitsu/240582874730360/5850531572813929370/5850531572813929370_signature_36.png",
         "p3_full_name": "Jasper foster",
-        "p3_dob": {
-            "day": "28",
-            "month": "01",
-            "year": "2014",
-            "datetime": "2014-01-28 00:00:00"
-        },
+        "p3_dob": "28/01/2014",
         "p3_medical_condition": "no meds p3",
         "p3_medical_checklist": [
             "Seizures"
@@ -103,6 +94,7 @@
     },
     {
         "submission_id": "5850220292819078699",
+        "created_at": "2024-02-29 08:20:30",
         "start_date": "2024-02-29",
         "email": "example@something.com",
         "contact_name": "Paul Smith",
@@ -116,13 +108,9 @@
         "mobile": "07745123456",
         "consent": "No (If you do not consent please make your instructor aware of this)",
         "convicted": "No",
+        "signed": "https://www.jotform.com/uploads/lurganjujitsu/240582874730360/5850220292819078699/5850220292819078699_signature_36.png",
         "p1_full_name": "John Smith p1",
-        "p1_dob": {
-            "day": "01",
-            "month": "01",
-            "year": "2015",
-            "datetime": "2015-01-01 00:00:00"
-        },
+        "p1_dob": "01/01/2015",
         "p1_medical_condition": "no meds p1",
         "p1_medical_checklist": [
             "Heart Trouble",
@@ -146,6 +134,7 @@
     },
     {
         "submission_id": "5850220292819078699",
+        "created_at": "2024-02-29 08:20:30",
         "start_date": "2024-02-29",
         "email": "example@something.com",
         "contact_name": "Paul Smith",
@@ -159,13 +148,9 @@
         "mobile": "07745123456",
         "consent": "No (If you do not consent please make your instructor aware of this)",
         "convicted": "No",
+        "signed": "https://www.jotform.com/uploads/lurganjujitsu/240582874730360/5850220292819078699/5850220292819078699_signature_36.png",
         "p2_full_name": "james smith p2",
-        "p2_dob": {
-            "day": "01",
-            "month": "01",
-            "year": "2016",
-            "datetime": "2016-01-01 00:00:00"
-        },
+        "p2_dob": "01/01/2016",
         "p2_medical_condition": "no meds p2",
         "p2_medical_checklist": [
             "Asthma",
@@ -177,6 +162,7 @@
     },
     {
         "submission_id": "5850220292819078699",
+        "created_at": "2024-02-29 08:20:30",
         "start_date": "2024-02-29",
         "email": "example@something.com",
         "contact_name": "Paul Smith",
@@ -190,13 +176,9 @@
         "mobile": "07745123456",
         "consent": "No (If you do not consent please make your instructor aware of this)",
         "convicted": "No",
+        "signed": "https://www.jotform.com/uploads/lurganjujitsu/240582874730360/5850220292819078699/5850220292819078699_signature_36.png",
         "p3_full_name": "becks smith",
-        "p3_dob": {
-            "day": "01",
-            "month": "01",
-            "year": "2014",
-            "datetime": "2014-01-01 00:00:00"
-        },
+        "p3_dob": "01/01/2014",
         "p3_medical_condition": "no meds p3",
         "p3_medical_checklist": [
             "HIV",
@@ -207,6 +189,7 @@
     },
     {
         "submission_id": "5849743152813477385",
+        "created_at": "2024-02-28 19:05:15",
         "start_date": "2024-02-29",
         "email": "email@etail.com",
         "contact_name": "contact name",
@@ -220,13 +203,9 @@
         "mobile": "na",
         "consent": "Yes",
         "convicted": "No",
+        "signed": "https://www.jotform.com/uploads/lurganjujitsu/240582874730360/5849743152813477385/5849743152813477385_signature_36.png",
         "p1_full_name": "John",
-        "p1_dob": {
-            "day": "27",
-            "month": "01",
-            "year": "2015",
-            "datetime": "2015-01-27 00:00:00"
-        },
+        "p1_dob": "27/01/2015",
         "p1_medical_condition": "none",
         "p1_medical_checklist": [
             "Heart Trouble"
@@ -236,6 +215,7 @@
     },
     {
         "submission_id": "5849743152813477385",
+        "created_at": "2024-02-28 19:05:15",
         "start_date": "2024-02-29",
         "email": "email@etail.com",
         "contact_name": "contact name",
@@ -249,8 +229,9 @@
         "mobile": "na",
         "consent": "Yes",
         "convicted": "No",
+        "signed": "https://www.jotform.com/uploads/lurganjujitsu/240582874730360/5849743152813477385/5849743152813477385_signature_36.png",
         "p2_full_name": "",
-        "p2_dob": "",
+        "p2_dob": "//",
         "p2_medical_condition": "",
         "p2_medical_checklist": "",
         "p2_allergy": "",
@@ -258,6 +239,7 @@
     },
     {
         "submission_id": "5849743152813477385",
+        "created_at": "2024-02-28 19:05:15",
         "start_date": "2024-02-29",
         "email": "email@etail.com",
         "contact_name": "contact name",
@@ -271,8 +253,9 @@
         "mobile": "na",
         "consent": "Yes",
         "convicted": "No",
+        "signed": "https://www.jotform.com/uploads/lurganjujitsu/240582874730360/5849743152813477385/5849743152813477385_signature_36.png",
         "p3_full_name": "",
-        "p3_dob": "",
+        "p3_dob": "//",
         "p3_medical_condition": "",
         "p3_medical_checklist": "",
         "p3_allergy": "",

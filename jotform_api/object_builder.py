@@ -1,11 +1,26 @@
 import json
+import requests
+import os
 
-# Load the JSON data from the file
-with open('jotform_api/data_files/jotform_submissions.json', 'r') as file:
-    submissions_data = json.load(file)
+# Define a directory to save the signature images
+signature_images_directory = 'jotform_api/signature_images'
+if not os.path.exists(signature_images_directory):
+    os.makedirs(signature_images_directory)
 
-# Filter only active submissions
-active_submissions = [submission for submission in submissions_data['content'] if submission['status'] == 'ACTIVE']
+def save_image_from_url(url, save_path):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(save_path, 'wb') as f:
+                f.write(response.content)
+            print(f"Image saved successfully as: {save_path}")
+            return True
+        else:
+            print(f"Failed to download image. Status code: {response.status_code}")
+            return False
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return False
 
 def build_detailed_objects(submissions):
     detailed_objects = []
@@ -39,6 +54,13 @@ def build_detailed_objects(submissions):
             "signed": submission['answers']['36'].get('answer', ""),
         }
 
+        signed_url = common_fields['signed']
+        if signed_url:
+            save_path = os.path.join(signature_images_directory, f"{submission['id']}_signature.png")
+            if save_image_from_url(signed_url, save_path):
+                # Update the common fields with the path to the saved image
+                common_fields['signature_image_path'] = save_path
+
         # Initialize three objects for the participants
         objects = [{**common_fields}, {**common_fields}, {**common_fields}]
         
@@ -46,13 +68,11 @@ def build_detailed_objects(submissions):
             if 'name' in value:
                 field_name = value['name']
                 if field_name.startswith('p') and 'dob' in field_name:
-                    # Extract and format the dob field
                     dob = value.get('answer', {})
                     formatted_dob = f"{dob.get('day', '')}/{dob.get('month', '')}/{dob.get('year', '')}"
-                    participant_index = int(field_name[1]) - 1  # Assuming 'p1_' maps to index 0
+                    participant_index = int(field_name[1]) - 1
                     objects[participant_index][field_name] = formatted_dob
                 else:
-                    # Handle other p{i}_ fields
                     if field_name.startswith('p1_'):
                         objects[0][field_name] = value.get('answer', '')
                     elif field_name.startswith('p2_'):
@@ -60,12 +80,16 @@ def build_detailed_objects(submissions):
                     elif field_name.startswith('p3_'):
                         objects[2][field_name] = value.get('answer', '')
 
-        
         detailed_objects.extend(objects)
 
     return detailed_objects
 
+# Load the JSON data from the file
+with open('jotform_api/data_files/jotform_submissions.json', 'r') as file:
+    submissions_data = json.load(file)
 
+# Filter only active submissions
+active_submissions = [submission for submission in submissions_data['content'] if submission['status'] == 'ACTIVE']
 
 # Build the detailed objects
 detailed_objects = build_detailed_objects(active_submissions)

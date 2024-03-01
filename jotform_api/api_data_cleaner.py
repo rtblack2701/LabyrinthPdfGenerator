@@ -74,7 +74,7 @@ def clean_data(input_json_file, output_json_file):
     
     
     
-    exceptions = {'email', 'signed'}
+    exceptions = {'email', 'signed', 'signature_image_path'}
     date_fields = {'created_at', 'start_date', 'participant.dob'}
     
     json_data = read_json(input_json_file)

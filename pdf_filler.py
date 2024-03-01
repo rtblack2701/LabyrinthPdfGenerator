@@ -1,5 +1,6 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
 from PyPDF2 import PdfReader, PdfWriter
 import json
 import os
@@ -14,6 +15,7 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         data = json.load(file)
 
     for entry in data:
+        submission_id = entry['submission_id']
         submission_date = entry['created_at']
         start_date = entry['start_date']
         # Participant-specific details
@@ -38,15 +40,32 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         convicted_details = entry['convicted_details']
         source = entry['source']
         # Signature
-        signed = entry['signed']
+        signed_url = entry['signature_image_path']
 
-        
+        # Define medical conditions with their corresponding coordinates and dimensions
+        medical_conditions = [
+            {"name": "Heart Trouble", "x": 40, "y": 527, "width": 58, "height": 13},
+            {"name": "Migraine", "x": 40, "y": 512, "width": 40, "height": 13},
+            {"name": "Asthma", "x": 40, "y": 497, "width": 37, "height": 13},
+            {"name": "ADD / ADHD", "x": 40, "y": 482, "width": 55, "height": 13},
+            {"name": "High Blood Pressure", "x": 160, "y": 527, "width": 85, "height": 13},
+            {"name": "Haemophilia", "x": 160, "y": 512, "width": 55, "height": 13},
+            {"name": "Seizures", "x": 160, "y": 497, "width": 43, "height": 13},
+            {"name": "Back Pain", "x": 160, "y": 482, "width": 44, "height": 13},
+            {"name": "Chest Pains", "x": 285, "y": 527, "width": 50, "height": 13},
+            {"name": "Diabetes", "x": 285, "y": 512, "width": 40, "height": 13},
+            {"name": "HIV", "x": 285, "y": 497, "width": 23, "height": 13},
+            {"name": "Hay Fever", "x": 285, "y": 482, "width": 45, "height": 13},
+            {"name": "Nervous Disorders", "x": 397, "y": 527, "width": 82, "height": 13},
+            {"name": "Faint / Dizzy Spells", "x": 397, "y": 512, "width": 80, "height": 13},
+            {"name": "Hernia", "x": 397, "y": 497, "width": 40, "height": 13},
+        ]
 
         # Read the template PDF
         template_pdf = PdfReader(template_path)
 
         # Create a PDF file for each entry
-        pdf_file_path = os.path.join(output_directory, f"{full_name}_form.pdf").upper()
+        pdf_file_path = os.path.join(output_directory, f"{submission_id}_{full_name}_form.pdf").upper()
         
         # Initialize a PdfWriter object for writing to a new PDF
         writer = PdfWriter()
@@ -58,7 +77,7 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         # Create a packet for new PDF with reportlab
         packet = io.BytesIO()
         can = canvas.Canvas(packet, pagesize=letter)
-        can.setFont("Helvetica", 9)
+        can.setFont('Helvetica', 7)
         can.drawString(85, 750, f"LURGAN & TANDRAGEE JU-JITSU CLUB")
         can.drawString(430, 288, f"{submission_date}") # Signed by parent/guardian date
         can.drawString(465, 93, f"{submission_date}") # Signed by instructor date
@@ -66,7 +85,6 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         can.drawString(75, 710, f"{full_name}")
         can.drawString(440, 710, f"{date_of_birth}")
         can.drawString(360, 570, f"{medical_condition}")
-        
         can.drawString(430, 488, f"{allergy}")
         can.drawString(80, 470, f"{other_medical}")
         can.drawString(160, 614, f"{contact_name} ({relationship})") # Emergency contact relationship
@@ -78,59 +96,25 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         can.drawString(85, 692, f"{address}")
         can.drawString(310, 674, f"{postcode}")
 
-        can.drawString(100, 600, f"{medical_checklist}") # Signed by instructor
-
-        # Medical checklist box rendering
-        if "Heart Trouble" in medical_checklist:
-            can.rect(40, 527, 58, 13)
-        if "Migraine" in medical_checklist:
-            can.rect(40, 512, 40, 13)
-        if "Asthma" in medical_checklist:
-            can.rect(40, 497, 37, 13)
-        if "ADD / ADHD" in medical_checklist:
-            can.rect(40, 482, 55, 13)
-        if "High Blood Pressure" in medical_checklist:
-            can.rect(160, 527, 85, 13)
-        if "Haemophilia" in medical_checklist:
-            can.rect(160, 512, 55, 13)
-        if "Seizures" in medical_checklist:
-            can.rect(160, 497, 43, 13)
-        if "Back Pain" in medical_checklist:
-            can.rect(160, 482, 44, 13)
-        if "Chest Pains" in medical_checklist:
-            can.rect(285, 527, 50, 13)
-        if "Diabetes" in medical_checklist:
-            can.rect(285, 512, 40, 13)
-        if "HIV" in medical_checklist:
-            can.rect(285, 497, 23, 13)
-        if "Hay Fever" in medical_checklist:
-            can.rect(285, 482, 45, 13)
-        if "Nervous Disorders" in medical_checklist:
-            can.rect(397, 527, 82, 13)
-        if "Faint / Dizzy Spells" in medical_checklist:
-            can.rect(397, 512, 80, 13)
-        if "Hernia" in medical_checklist:
-            can.rect(397, 497, 40, 13)
+        # Loop through each condition and render a box if it's in the checklist
+        for condition in medical_conditions:
+            if condition["name"] in medical_checklist:
+                can.rect(condition["x"], condition["y"], condition["width"], condition["height"])
 
         can.setFont("Helvetica", 15)
-        # Conditional rendering for media consent
+        # Conditional rendering for media consent & conviction
         can.drawString(315, 355, "X") if media_consent.upper() == "YES" else can.drawString(362, 355, "X")
-         
-
-        # Conditional rendering for conviction
         can.drawString(315, 329, "X") if convicted.upper() == "YES" else can.drawString(362, 329, "X")
         
         can.setFont("Helvetica", 9)
         can.drawString(150, 315, f"{convicted_details}")
         can.drawString(320, 228, f"{source}")
         
-        
-
-
-        can.setFont("Helvetica", 16)
-        can.drawString(260, 95, f"William Watson")
+        # Instructor signature
+        can.setFont("Helvetica", 15)
+        can.drawString(260, 95, "William Watson")  # Example usage with custom font
         can.save()
-
+        
         # Move to the beginning of the StringIO buffer
         packet.seek(0)
         new_pdf = PdfReader(packet)

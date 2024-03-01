@@ -1,6 +1,6 @@
 import requests
 import json
-from config_loader import load_config
+from jotform_api.api_endpoints.config_loader import load_config
 from jotform import JotformAPIClient
 
 apiKey, form_id = load_config()

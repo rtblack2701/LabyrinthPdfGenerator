@@ -162,3 +162,4 @@ cython_debug/
 
 pdfs/*
 archive/*
+jotform_api/data_files/*

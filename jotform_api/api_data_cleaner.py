@@ -44,12 +44,8 @@ def clean_data(input_json_file, output_json_file):
             process_entry(submission)
         return data
     
+    # Format date fields to the desired format for consistency
     def format_date_fields(data, date_fields):
-        """
-        Convert specified date fields to DD/MM/YYYY format, handling multiple input formats.
-        :param data: List of dictionaries (submissions).
-        :param date_fields: List of fields to format as dates.
-        """
         date_formats = ["%Y-%m-%d", "%Y-%m-%d %H:%M:%S"]  # Add more formats as needed
 
         def process_entry(entry, parent_key=''):

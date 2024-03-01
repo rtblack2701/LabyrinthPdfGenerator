@@ -5,10 +5,16 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import io
 
-def overlay_signature(pdf_path, signature_image_path, output_pdf_path, signature_coords):
+def overlay_signature(pdf_path, signature_image_path, coaches_signature_path, output_pdf_path, signature_coords, coaches_signature_coords):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
+    
+    # Overlay the dynamic signature
     can.drawImage(signature_image_path, *signature_coords, mask='auto')
+    
+    # Overlay the coaches' signature
+    can.drawImage(coaches_signature_path, *coaches_signature_coords, mask='auto')
+    
     can.save()
 
     packet.seek(0)
@@ -41,7 +47,7 @@ def load_signature_mappings(json_file_path):
     return signature_mappings
     
 
-def process_all_pdfs(pdf_directory, signatures_directory, output_directory, signature_coords, json_file_path):
+def process_all_pdfs(pdf_directory, signatures_directory, output_directory, signature_coords, coaches_signature_path, coaches_signature_coords, json_file_path):
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
@@ -58,7 +64,7 @@ def process_all_pdfs(pdf_directory, signatures_directory, output_directory, sign
                 if os.path.exists(signature_image_path):
                     output_pdf_path = os.path.join(output_directory, pdf_file)
                     pdf_path = os.path.join(pdf_directory, pdf_file)
-                    overlay_signature(pdf_path, signature_image_path, output_pdf_path, signature_coords)
+                    overlay_signature(pdf_path, signature_image_path, coaches_signature_path, output_pdf_path, signature_coords, coaches_signature_coords)
                     print(f"Processed {pdf_file}")
                 else:
                     print(f"Signature image not found for {pdf_file} (submission ID: {submission_id})")
@@ -71,7 +77,10 @@ signatures_directory = 'assets/signature_images'
 output_directory = 'assets/pdfs/post_signed'
 json_file_path = 'jotform_api/data_files/cleaned_submission_data.json'
 signature_coords = (90, 285, 145, 23)  # Example coordinates (x, y, width, height)
+coaches_signature_path = 'assets/coach_signature.png'
+coaches_signature_coords = (230, 70, 180, 50)  # Adjust these coordinates as needed
 
-process_all_pdfs(pdf_directory, signatures_directory, output_directory, signature_coords, json_file_path)
+process_all_pdfs(pdf_directory, signatures_directory, output_directory, signature_coords, coaches_signature_path, coaches_signature_coords, json_file_path)
+
 
 

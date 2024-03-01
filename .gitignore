@@ -162,4 +162,5 @@ cython_debug/
 
 archive/*
 jotform_api/data_files/
-assets/
+assets/pdfs/
+assets/signature_images/

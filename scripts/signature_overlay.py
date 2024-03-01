@@ -43,7 +43,7 @@ def load_signature_mappings(json_file_path):
         submission_id = submission['submission_id']
         signature_image_path = f"{submission_id}_signature.png"  # Assuming signature images are named as such
         signature_mappings[submission_id] = signature_image_path
-    print(signature_mappings)
+    print("Confirming" + {signature_mappings})
     return signature_mappings
     
 

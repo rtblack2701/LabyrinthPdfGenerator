@@ -77,7 +77,7 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         # Create a packet for new PDF with reportlab
         packet = io.BytesIO()
         can = canvas.Canvas(packet, pagesize=letter)
-        can.setFont('Helvetica', 7)
+        can.setFont('Helvetica', 9)
         can.drawString(85, 750, f"LURGAN & TANDRAGEE JU-JITSU CLUB")
         can.drawString(430, 288, f"{submission_date}") # Signed by parent/guardian date
         can.drawString(465, 93, f"{submission_date}") # Signed by instructor date

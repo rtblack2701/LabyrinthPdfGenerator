@@ -1,2 +1,6 @@
-reportlab==4.1.0
+Flask==3.0.2
+jotform==1.2
+pandas==2.2.1
 PyPDF2==3.0.1
+reportlab==4.1.0
+requests==2.31.0

@@ -65,7 +65,9 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
             template_pdf = PdfReader(template_path)
 
             # Create a PDF file for each entry
-            pdf_file_path = os.path.join(output_directory, f"{submission_id}_{full_name}_form.pdf").upper()
+            pdf_preprocess_directory = os.path.join(output_directory)
+            pdf_filename = f"{submission_id}_{full_name}_form.pdf".upper()
+            pdf_file_path = os.path.join(pdf_preprocess_directory, pdf_filename)
         else:
             print(f"Skipping entry {entry['submission_id']} due to missing full name.")
         

@@ -1,4 +1,4 @@
-name: Run Python Script
+name: Generate new member submission pdfs
 
 on:
 #   schedule:
@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.12' # Specify the Python version
 

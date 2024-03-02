@@ -25,3 +25,12 @@ jobs:
         
       - name: Run the script
         run: python main.py 
+        
+      - name: Zip project files
+        run: zip -r processed_files.zip .
+
+      - name: Upload zip file as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: processed_files
+          path: processed_files.zip

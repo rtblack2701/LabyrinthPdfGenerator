@@ -15,57 +15,59 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         data = json.load(file)
 
     for entry in data:
-        submission_id = entry['submission_id']
-        submission_date = entry['created_at']
-        start_date = entry['start_date']
-        # Participant-specific details
-        full_name = entry['participant'][0]['full_name']
-        date_of_birth = entry['participant'][0]['dob']
-        medical_condition = entry['participant'][0]['medical_condition']
-        medical_checklist = entry['participant'][0]['medical_checklist']
-        allergy = entry['participant'][0]['allergy']
-        other_medical = entry['participant'][0]['other_medical']
-        # Parent/guardian details + contact information
-        contact_name = entry['contact_name']
-        phone = entry['phone']
-        mobile = entry['mobile']
-        email = entry['email']
-        emergency_contact_phone = entry['emergency_contact_phone']
-        relationship = entry['relationship'] 
-        address = entry['address']
-        postcode = entry['postcode']
-        # Consent, background, and media release
-        media_consent = entry['consent']
-        convicted = entry['convicted']
-        convicted_details = entry['convicted_details']
-        source = entry['source']
-        # Signature
-        signed_url = entry['signature_image_path']
+        # Check if 'full_name' is present and not empty for the participant
+        if 'participant' in entry and entry['participant'][0].get('full_name'):
+            submission_id = entry['submission_id']
+            submission_date = entry['created_at']
+            start_date = entry['start_date']
+            # Participant-specific details
+            full_name = entry['participant'][0]['full_name']
+            date_of_birth = entry['participant'][0]['dob']
+            medical_condition = entry['participant'][0]['medical_condition']
+            medical_checklist = entry['participant'][0]['medical_checklist']
+            allergy = entry['participant'][0]['allergy']
+            other_medical = entry['participant'][0]['other_medical']
+            # Parent/guardian details + contact information
+            contact_name = entry['contact_name']
+            phone = entry['phone']
+            mobile = entry['mobile']
+            email = entry['email']
+            emergency_contact_phone = entry['emergency_contact_phone']
+            relationship = entry['relationship'] 
+            address = entry['address']
+            postcode = entry['postcode']
+            # Consent, background, and media release
+            media_consent = entry['consent']
+            convicted = entry['convicted']
+            convicted_details = entry['convicted_details']
+            source = entry['source']
 
-        # Define medical conditions with their corresponding coordinates and dimensions
-        medical_conditions = [
-            {"name": "Heart Trouble", "x": 40, "y": 527, "width": 58, "height": 13},
-            {"name": "Migraine", "x": 40, "y": 512, "width": 40, "height": 13},
-            {"name": "Asthma", "x": 40, "y": 497, "width": 37, "height": 13},
-            {"name": "ADD / ADHD", "x": 40, "y": 482, "width": 55, "height": 13},
-            {"name": "High Blood Pressure", "x": 160, "y": 527, "width": 85, "height": 13},
-            {"name": "Haemophilia", "x": 160, "y": 512, "width": 55, "height": 13},
-            {"name": "Seizures", "x": 160, "y": 497, "width": 43, "height": 13},
-            {"name": "Back Pain", "x": 160, "y": 482, "width": 44, "height": 13},
-            {"name": "Chest Pains", "x": 285, "y": 527, "width": 50, "height": 13},
-            {"name": "Diabetes", "x": 285, "y": 512, "width": 40, "height": 13},
-            {"name": "HIV", "x": 285, "y": 497, "width": 23, "height": 13},
-            {"name": "Hay Fever", "x": 285, "y": 482, "width": 45, "height": 13},
-            {"name": "Nervous Disorders", "x": 397, "y": 527, "width": 82, "height": 13},
-            {"name": "Faint / Dizzy Spells", "x": 397, "y": 512, "width": 80, "height": 13},
-            {"name": "Hernia", "x": 397, "y": 497, "width": 40, "height": 13},
-        ]
+            # Define medical conditions with their corresponding coordinates and dimensions
+            medical_conditions = [
+                {"name": "Heart Trouble", "x": 40, "y": 527, "width": 58, "height": 13},
+                {"name": "Migraine", "x": 40, "y": 512, "width": 40, "height": 13},
+                {"name": "Asthma", "x": 40, "y": 497, "width": 37, "height": 13},
+                {"name": "ADD / ADHD", "x": 40, "y": 482, "width": 55, "height": 13},
+                {"name": "High Blood Pressure", "x": 160, "y": 527, "width": 85, "height": 13},
+                {"name": "Haemophilia", "x": 160, "y": 512, "width": 55, "height": 13},
+                {"name": "Seizures", "x": 160, "y": 497, "width": 43, "height": 13},
+                {"name": "Back Pain", "x": 160, "y": 482, "width": 44, "height": 13},
+                {"name": "Chest Pains", "x": 285, "y": 527, "width": 50, "height": 13},
+                {"name": "Diabetes", "x": 285, "y": 512, "width": 40, "height": 13},
+                {"name": "HIV", "x": 285, "y": 497, "width": 23, "height": 13},
+                {"name": "Hay Fever", "x": 285, "y": 482, "width": 45, "height": 13},
+                {"name": "Nervous Disorders", "x": 397, "y": 527, "width": 82, "height": 13},
+                {"name": "Faint / Dizzy Spells", "x": 397, "y": 512, "width": 80, "height": 13},
+                {"name": "Hernia", "x": 397, "y": 497, "width": 40, "height": 13},
+            ]
 
-        # Read the template PDF
-        template_pdf = PdfReader(template_path)
+            # Read the template PDF
+            template_pdf = PdfReader(template_path)
 
-        # Create a PDF file for each entry
-        pdf_file_path = os.path.join(output_directory, f"{submission_id}_{full_name}_form.pdf").upper()
+            # Create a PDF file for each entry
+            pdf_file_path = os.path.join(output_directory, f"{submission_id}_{full_name}_form.pdf").upper()
+        else:
+            print(f"Skipping entry {entry['submission_id']} due to missing full name.")
         
         # Initialize a PdfWriter object for writing to a new PDF
         writer = PdfWriter()

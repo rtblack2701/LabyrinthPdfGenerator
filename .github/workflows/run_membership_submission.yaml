@@ -1,10 +1,10 @@
 name: Generate new member submission pdfs
 
 on:
-#   schedule:
-#     # Runs at 5 PM UTC every day
-#     #- cron: '0 17 * * *'
-    workflow_dispatch: # This line enables manual triggering of the workflow
+  schedule:
+    # Runs at 5 PM UTC every day
+    - cron: '0 12 */3 * *'
+  workflow_dispatch: # This line enables manual triggering of the workflow
 
 jobs:
   run-script:

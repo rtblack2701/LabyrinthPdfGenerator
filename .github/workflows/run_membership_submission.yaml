@@ -23,10 +23,10 @@ jobs:
             python -m pip install --upgrade pip
             pip install -r requirements.txt
         
-      - name: Run the script
+      - name: Run PDF Generation Script
         run: python main.py 
         
-      - name: Zip project files
+      - name: Zip processed induction forms
         run: zip -r processed_files.zip .
 
       - name: Upload zip file as an artifact

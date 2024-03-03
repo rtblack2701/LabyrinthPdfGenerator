@@ -30,7 +30,7 @@ jobs:
         run: zip -r processed_files.zip .
 
       - name: Upload zip file as an artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: LTJJC_InductionForms
           path: LTJJC_InductionForms*.zip

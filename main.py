@@ -24,13 +24,15 @@ def main():
     # 5. Overlay the PDFs with parent/guardian and coach signatures
     run_script(["python", "-m", "scripts.signature_overlay"])
 
-    # 6. Update the list of processed submissions
+    # HANDLE POST PROCESSING STEPS
+
+    # 1. Update the list of processed submissions
     run_script(["python", "-m", "scripts.post_process_scripts.log_processed_submissions"])
 
-    # 7. Zip the PDFs
-    run_script(["python", "-m", "scripts.zip_email_pdfs"])
+    # 2. Zip the PDFs
+    run_script(["python", "-m", "scripts.post_process_scripts.zip_email_pdfs"])
 
-    # 8. Clean up the directories
+    # 3. Clean up the directories
     run_script(["python", "-m", "scripts.post_process_scripts.generated_file_removal"])
 
     end_time = time.time()  # Capture end time

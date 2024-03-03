@@ -32,5 +32,5 @@ jobs:
       - name: Upload zip file as an artifact
         uses: actions/upload-artifact@v2
         with:
-          name: processed_files
-          path: Lurgan-Tandragee_InductionForms*.zip
+          name: LTJJC_InductionForms
+          path: LTJJC_InductionForms*.zip

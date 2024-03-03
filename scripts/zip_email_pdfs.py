@@ -7,7 +7,7 @@ import glob
 current_date = datetime.now().strftime("%Y-%m-%d")
 
 # Step 2: Zip the PDF files
-def zip_files(directory="assets/pdfs/post_signed", zip_name=f"Lurgan-Tandragee_InductionForms-{current_date}.zip"):
+def zip_files(directory="assets/pdfs/post_signed", zip_name=f"LTJJC_InductionForms-{current_date}.zip"):
     files = glob.glob(f"{directory}/*.PDF")  # Adjusted to select only .PDF files
     with ZipFile(zip_name, 'w') as zipf:
         for file in files:

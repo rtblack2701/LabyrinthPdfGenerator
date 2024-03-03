@@ -22,11 +22,21 @@ def save_image_from_url(url, save_path):
         print(f"An error occurred: {e}")
         return False
 
+def extract_value_by_name(answers, name_key):
+    for key, value in answers.items():
+        if value.get('name') == name_key:
+            # Ensure it returns a dictionary with 'answer' even if it's just an empty string
+            return {'answer': value.get('answer', '')}
+    # Return a default dictionary with an empty 'answer' if no match is found
+    return {'answer': ''}
+
+
 def build_detailed_objects(submissions):
     detailed_objects = []
 
     for submission in submissions:
-        start_date_info = submission['answers']['5']['answer']
+        answers = submission['answers']
+        start_date_info = extract_value_by_name(answers, 'start_date')['answer']
         start_date = start_date_info.get('prettyFormat', 
                                          f"{start_date_info.get('year', '')}-{start_date_info.get('month', '')}-{start_date_info.get('day', '')}")
         
@@ -39,19 +49,19 @@ def build_detailed_objects(submissions):
             "submission_id": submission['id'],
             "created_at": submission['created_at'],
             "start_date": start_date,
-            "email": submission['answers']['12'].get('answer', ''),
-            "contact_name": submission['answers']['14'].get('answer', ''),
-            "convicted_details": submission['answers']['35'].get('answer', ''),
-            "source": submission['answers']['70'].get('answer', ''),
+            "email": extract_value_by_name(answers, 'email')['answer'],
+            "contact_name": extract_value_by_name(answers, 'contact_name')['answer'],
+            "convicted_details": extract_value_by_name(answers, 'convicted_details')['answer'],
+            "source": extract_value_by_name(answers, 'source')['answer'],
             "address": address,
             "postcode": postcode,
-            "phone": submission['answers']['72'].get('answer', ''),
-            "relationship": submission['answers']['75'].get('answer', ''),
-            "emergency_contact_phone": submission['answers']['76'].get('answer', ''),
-            "mobile": submission['answers']['78'].get('answer', ''),
-            "consent": submission['answers']['79'].get('answer', ''),
-            "convicted": submission['answers']['80'].get('answer', ''),
-            "signed": submission['answers']['36'].get('answer', ""),
+            "phone": extract_value_by_name(answers, 'phone')['answer'],
+            "relationship": extract_value_by_name(answers, 'relationship')['answer'],
+            "emergency_contact_phone": extract_value_by_name(answers, 'emergency_contact_phone')['answer'],
+            "mobile": extract_value_by_name(answers, 'mobile')['answer'],
+            "consent": extract_value_by_name(answers, 'consent')['answer'],
+            "convicted": extract_value_by_name(answers, 'convicted')['answer'],
+            "signed": extract_value_by_name(answers, 'signed')['answer'],
         }
 
         signed_url = common_fields['signed']

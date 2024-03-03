@@ -1,13 +1,26 @@
-import pandas as pd
 import json
 from datetime import datetime
 
-def clean_data(input_json_file, output_json_file):
+def clean_data(input_json_file, output_json_file, completed_submissions_file):
     def read_json(file_path):
         with open(file_path, 'r') as file:
             return json.load(file)
-        
-    # Consolidate participant data into a list of dictionaries and remove the original participant fields e.g. p1_full_name, p1_dob, etc.
+    
+    def remove_completed_submissions(data, completed_ids):
+        filtered_data = []
+        printed_ids = set()  # Keep track of printed submission_ids
+
+        for submission in data:
+            if submission['submission_id'] in completed_ids:
+                # Only print the message if we haven't already printed this submission_id
+                if submission['submission_id'] not in printed_ids:
+                    print(f"Removing submission_id: {submission['submission_id']} as it has already been processed.")
+                    printed_ids.add(submission['submission_id'])
+            else:
+                filtered_data.append(submission)
+        return filtered_data
+
+    
     def consolidate_participants(data):
         for submission in data:
             participants = []
@@ -16,7 +29,7 @@ def clean_data(input_json_file, output_json_file):
             
             for uid in unique_ids:
                 participant_data = {key.split('_', 1)[1]: submission.pop(key) for key in participant_keys if key.startswith(uid)}
-                if participant_data:  # Only add if there's actual data
+                if participant_data:
                     participants.append(participant_data)
             
             if participants:
@@ -24,13 +37,11 @@ def clean_data(input_json_file, output_json_file):
         
         return data
     
-    # Make all values uppercase except for the ones in the exceptions set (email and signed fields in this case)
     def uppercase_values_except(data, exceptions):
         def process_entry(entry, parent_key=''):
             for key, value in entry.items():
                 full_key = f"{parent_key}.{key}" if parent_key else key
                 
-                # Check if the value should be converted to uppercase
                 if isinstance(value, str) and full_key not in exceptions:
                     entry[key] = value.upper()
                 elif isinstance(value, dict):
@@ -39,48 +50,46 @@ def clean_data(input_json_file, output_json_file):
                     for item in value:
                         if isinstance(item, dict):
                             process_entry(item, full_key)
-
+        
         for submission in data:
             process_entry(submission)
         return data
     
-    # Format date fields to the desired format for consistency
     def format_date_fields(data, date_fields):
-        date_formats = ["%Y-%m-%d", "%Y-%m-%d %H:%M:%S"]  # Add more formats as needed
-
+        date_formats = ["%Y-%m-%d", "%Y-%m-%d %H:%M:%S"]
+        
         def process_entry(entry, parent_key=''):
             for key, value in entry.items():
                 full_key = f"{parent_key}.{key}" if parent_key else key
                 
-                # Attempt to format the date if the key matches and value is a string
                 if full_key in date_fields and isinstance(value, str):
                     for format in date_formats:
                         try:
                             parsed_date = datetime.strptime(value, format)
                             entry[key] = parsed_date.strftime("%d/%m/%Y")
-                            break  # Exit the loop on successful parsing
+                            break
                         except ValueError:
-                            continue  # Try the next format if parsing fails
-                elif isinstance(value, dict):
-                    process_entry(value, full_key)
-                elif isinstance(value, list):
-                    for item in value:
-                        if isinstance(item, dict):
-                            process_entry(item, full_key)
-
+                            continue
+        
         for submission in data:
             process_entry(submission)
         return data
     
-    exceptions = {'email', 'signed', 'signature_image_path'}
-    date_fields = {'created_at', 'start_date', 'participant.dob'}
+    # Load the completed submission IDs
+    completed_submissions = read_json(completed_submissions_file)
+    completed_ids = completed_submissions["240582874730360"]
     
     json_data = read_json(input_json_file)
-    consolidate_participants = consolidate_participants(json_data)
-    uppercase_values_except = uppercase_values_except(consolidate_participants, exceptions)
-    format_date_fields = format_date_fields(uppercase_values_except, date_fields)
+    json_data = remove_completed_submissions(json_data, completed_ids)  # Apply the removal
+    consolidated_data = consolidate_participants(json_data)
+    with_uppercase = uppercase_values_except(consolidated_data, {'email', 'signed', 'signature_image_path'})
+    final_data = format_date_fields(with_uppercase, {'created_at', 'start_date', 'participant.dob'})
 
     with open(output_json_file, 'w') as file:
-        json.dump(format_date_fields, file, indent=4)
+        json.dump(final_data, file, indent=4)
 
-clean_data('jotform_api/data_files/built_form_submission.json', 'jotform_api/data_files/cleaned_submission_data.json')
+try:
+    clean_data('jotform_api/data_files/built_form_submission.json', 'jotform_api/data_files/cleaned_submission_data.json', 'jotform_api/completed_submissions/completed_submissions.json')
+    print("Data cleaning process completed successfully")
+except Exception as e:
+    print(f"Error cleaning the data: {e}")

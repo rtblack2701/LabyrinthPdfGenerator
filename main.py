@@ -1,11 +1,20 @@
 import subprocess
 import time
+import json
 
 def run_script(command):
     try:
         subprocess.run(command, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error running command: {command}\nError: {e}")
+
+def check_for_empty_data(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+            return len(data) == 0  # True if data is an empty list
+    except (FileNotFoundError, json.JSONDecodeError):
+        return True  # Treat missing or invalid files as empty
 
 def main():
     start_time = time.time()  # Capture start time
@@ -18,6 +27,12 @@ def main():
     # 3. Clean the JSON file
     run_script(["python", "-m" "scripts.api_data_cleaner"])
     
+    # If the cleaned_submission_data.json file is not empty, proceed with the following steps
+    if check_for_empty_data('jotform_api/data_files/cleaned_submission_data.json'):
+        print("No induction forms to process.")
+        return  # Exit the main function early if there are no forms to process
+
+
     # 4. Generate the PDFs
     run_script(["python", "-m" "scripts.pdf_filler"])
     

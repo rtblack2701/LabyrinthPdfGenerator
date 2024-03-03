@@ -129,5 +129,7 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         with open(pdf_file_path, 'wb') as output_pdf:
             writer.write(output_pdf)
 
-# Example usage
-create_pdfs_from_json('jotform_api/data_files/cleaned_submission_data.json', 'assets/pdfs/pre_signed', 'templates/InductionForm.pdf')
+try:
+    create_pdfs_from_json('jotform_api/data_files/cleaned_submission_data.json', 'assets/pdfs/pre_signed', 'templates/InductionForm.pdf')
+except Exception as e:
+    print(f"Error creating PDFs: {e}")

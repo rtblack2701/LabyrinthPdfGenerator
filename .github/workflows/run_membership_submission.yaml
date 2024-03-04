@@ -27,7 +27,7 @@ jobs:
         run: python main.py 
         
       - name: Zip processed induction forms
-        run: zip -r LTJJC_InductionForms.zip .
+        run: zip -r processed_files.zip LTJJC_InductionForms-*.zip
 
       - name: Upload zip file as an artifact
         uses: actions/upload-artifact@v3
@@ -35,7 +35,7 @@ jobs:
           name: LTJJC_InductionForms
           path: LTJJC_InductionForms*.zip
       
-      - name: Email submission forms
+      - name: Email bubmission forms
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -46,5 +46,5 @@ jobs:
           subject: LTJJC Induction Form Submissions 
           to: rtblack2701@gmail.com
           from: LTJJC Induction Form Submissions 
-          body: Build job of ${{github.repository}} completed successfully!
-          attachments: LTJJC_InductionForms.zip
+          body: Latest membership form submission job of ${{github.repository}} completed successfully!
+          attachments: LTJJC_InductionForms-*.zip

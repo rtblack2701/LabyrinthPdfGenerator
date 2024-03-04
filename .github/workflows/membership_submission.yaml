@@ -1,0 +1,78 @@
+name: Generate new member submission pdfs
+
+on:
+  schedule:
+    # Runs at 12:30 PM every 3rd day of the month
+    - cron: '30 12 3 * *'
+  workflow_dispatch: # This line enables manual triggering of the workflow
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+        
+      - name: Run PDF Generation Script
+        run: python main.py 
+
+      - name: Check for files
+        id: check_files
+        run: |
+          if compgen -G "LTJJC_InductionForms-*.zip" > /dev/null; then
+            echo "files_exist=true" >> $GITHUB_OUTPUT
+          else
+            echo "files_exist=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Zip processed induction forms
+        if: ${{ steps.check_files.outputs.files_exist == 'true' }}
+        run: zip -r processed_files.zip LTJJC_InductionForms-*.zip
+
+      - name: Upload zip file as an artifact
+        if: ${{ steps.check_files.outputs.files_exist == 'true' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: LTJJC_InductionForms
+          path: LTJJC_InductionForms-*.zip
+      
+      - name: Email submission forms
+        if: ${{ steps.check_files.outputs.files_exist == 'true' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: LTJJC Induction Form Submissions
+          to: ${{ secrets.MAIL_USERNAME }}
+          bcc: ${{ secrets.MAIL_USERNAME }}
+          from: LTJJC Induction Form Submissions
+          body: Latest membership form submission job of ${{ github.repository }} completed successfully!
+          attachments: LTJJC_InductionForms-*.zip
+        
+      - name: Email no forms to process
+        if: ${{ steps.check_files.outputs.files_exist == 'false' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: LTJJC Induction Form Submissions - No Forms to Process
+          to: ${{ secrets.MAIL_USERNAME }}
+          bcc: ${{ secrets.MAIL_USERNAME }}
+          from: LTJJC Induction Form Submissions
+          body: No new membership form submissions to process.

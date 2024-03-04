@@ -44,7 +44,8 @@ jobs:
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
           subject: LTJJC Induction Form Submissions 
-          to: rtblack2701@gmail.com
+          to: ${{secrets.LTJJC_EMAIL}}
+          bcc: ${{secrets.MAIL_USERNAME}}
           from: LTJJC Induction Form Submissions 
           body: Latest membership form submission job of ${{github.repository}} completed successfully!
           attachments: LTJJC_InductionForms-*.zip

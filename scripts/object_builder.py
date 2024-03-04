@@ -40,7 +40,7 @@ def build_detailed_objects(submissions):
         start_date = start_date_info.get('prettyFormat', 
                                          f"{start_date_info.get('year', '')}-{start_date_info.get('month', '')}-{start_date_info.get('day', '')}")
         
-        address_info = submission['answers']['71']['answer']
+        address_info = extract_value_by_name(answers, 'address')['answer']
         address = address_info.get('prettyFormat', f"{address_info.get('addr_line1', '')}, {address_info.get('city', '')}")
         postcode = address_info.get('prettyFormat', f"{address_info.get('postal', '')}")
        

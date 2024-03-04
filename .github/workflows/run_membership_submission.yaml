@@ -35,7 +35,7 @@ jobs:
           name: LTJJC_InductionForms
           path: LTJJC_InductionForms*.zip
       
-      - name: Email bubmission forms
+      - name: Email submission forms
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -44,7 +44,7 @@ jobs:
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
           subject: LTJJC Induction Form Submissions 
-          to: ${{secrets.LTJJC_EMAIL}}
+          to: ${{secrets.MAIL_USERNAME}}
           bcc: ${{secrets.MAIL_USERNAME}}
           from: LTJJC Induction Form Submissions 
           body: Latest membership form submission job of ${{github.repository}} completed successfully!

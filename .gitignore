@@ -165,3 +165,4 @@ jotform_api/data_files/*
 assets/pdfs/pre_signed/*
 assets/pdfs/post_signed/*
 assets/signature_images/*
+jotform_api/api_endpoints/api_creds.json

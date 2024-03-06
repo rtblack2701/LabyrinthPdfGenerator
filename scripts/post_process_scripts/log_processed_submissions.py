@@ -29,7 +29,7 @@ def read_submission_ids(cleaned_data_file):
 
 processed_file_path = 'jotform_api/completed_submissions/completed_submissions.json'  # Update with the actual path
 submission_ids = read_submission_ids('jotform_api/data_files/cleaned_submission_data.json') # Update with the actual path
-form_id = 240582874730360
+form_id = 240652651606353
 
 update_processed_submissions(processed_file_path, str(form_id), submission_ids)
 

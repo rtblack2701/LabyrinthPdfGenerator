@@ -7,12 +7,36 @@ import os
 
 # Assume the functions load_encrypted_config, save_image_from_url already exist
 
+def format_address_fields(common_fields):
+    """Format the address and postcode fields within common_fields."""
+    address_dict = common_fields.get('address', {})
+    if isinstance(address_dict, dict):
+        addr_line1 = address_dict.get('addr_line1', '').strip()
+        city = address_dict.get('city', '').strip()
+        postal = address_dict.get('postal', '').strip().upper()
+        
+        # Format the address string
+        formatted_address = ', '.join(filter(None, [addr_line1, city]))
+        common_fields['address'] = formatted_address
+
+        # Correctly format and assign the postcode
+        if len(postal) > 3:
+            common_fields['postcode'] = f"{postal[:-3].rstrip()} {postal[-3:]}"
+        else:
+            common_fields['postcode'] = postal
+    else:
+        common_fields['address'] = ""
+        common_fields['postcode'] = ""
+
+
 def extract_participant_data(submission):
     """
     Extract and transform participant data from a single submission.
     """
     # Helper function to extract a value by name
     def extract_value_by_name(name_key, answers):
+        if answers is None or not isinstance(answers, dict):
+            return ''
         for answer in answers.values():
             if answer.get('name') == name_key:
                 return answer.get('answer', '')
@@ -41,20 +65,45 @@ def extract_participant_data(submission):
         "participants": []  # Placeholder for participant details
     }
 
+    format_address_fields(common_fields)
+
     # Process participants
     for i in range(1, 4):  # Assuming up to 3 participants
-        participant_prefix = f'p{i}_'
-        participant = {}
-        for key, value in submission['answers'].items():
-            if key.startswith(participant_prefix):
-                clean_key = key[len(participant_prefix):]
-                participant[clean_key] = value.get('answer', '')
-        
-        # Add participant if there are details present
-        if participant:
-            common_fields['participants'].append(participant)
+        participant_data = {
+            "full_name": extract_value_by_name(f'p{i}_full_name', submission['answers']),
+            "dob": extract_value_by_name(f'p{i}_dob', submission['answers']),
+            "medical_condition": extract_value_by_name(f'p{i}_medical_condition', submission['answers']),
+            "medical_checklist": extract_value_by_name(f'p{i}_medical_checklist', submission['answers']),
+            "allergy": extract_value_by_name(f'p{i}_allergy', submission['answers']),
+            "other_medical": extract_value_by_name(f'p{i}_other_medical', submission['answers']),
+        }
+
+        # Check if the participant has any information filled out
+        if any(participant_data.values()):
+            common_fields['participants'].append(participant_data)
     
     return common_fields
+
+def format_date(date_str):
+    """Attempt to format a date string."""
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S").strftime("%d/%m/%Y")
+    except ValueError:
+        return date_str  # Return the original string if formatting fails
+
+def format_date_fields(submission):
+    """Format date fields for a submission, replacing nested date structures with strings."""
+    # Format 'created_at' directly
+    submission['created_at'] = format_date(submission['created_at'])
+
+    # Replace 'start_date' with formatted 'datetime' string
+    if 'start_date' in submission and 'datetime' in submission['start_date']:
+        submission['start_date'] = format_date(submission['start_date']['datetime'])
+
+    # Replace each participant's 'dob' with formatted 'datetime' string
+    for participant in submission.get('participants', []):
+        if 'dob' in participant and 'datetime' in participant['dob']:
+            participant['dob'] = format_date(participant['dob']['datetime'])
 
 
 def clean_data(data):
@@ -101,32 +150,8 @@ def clean_data(data):
             
             process_entry(submission)
             
-            def format_date_fields(submission, date_fields):
-                def process_entry(entry, path_list):
-                    if not path_list:  # Base case: no more path segments to process
-                        return
-                    current_path, *remaining_paths = path_list
-                    if isinstance(entry, dict) and current_path in entry:
-                        if remaining_paths:  # If there are more paths, recurse deeper
-                            process_entry(entry[current_path], remaining_paths)
-                        else:  # If this is the target field, attempt to format the date
-                            value = entry[current_path]
-                            if isinstance(value, str):  # Ensure the value is a string
-                                try:
-                                    parsed_date = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
-                                    entry[current_path] = parsed_date.strftime("%d/%m/%Y")
-                                except ValueError:
-                                    pass
-
-                for field in date_fields:
-                    path_list = field.split('.')
-                    process_entry(submission, path_list)
-
-            # Example usage
-            date_fields = ['created_at', 'start_date', 'participants.dob']
-            for submission in cleaned_data:
-                format_date_fields(submission, date_fields)
             
+            format_date_fields(submission)
             cleaned_data.append(submission)
     
     return cleaned_data
@@ -163,8 +188,8 @@ def write_final_output(data, file_path='final_output.json'):
 
 # Main execution
 try:
-    key_path = "jotform_api/configuration/encryption_key.key"
-    config_path = "jotform_api/configuration/encrypted_config_file.enc"
+    key_path = "jotform_api/.configuration/clone_encryption_key.key"
+    config_path = "jotform_api/configuration/clone_encrypted_config_file.enc"
     config = load_encrypted_config(key_path, config_path)
     api_key = config.get("JOTFORM_API_KEY")
     form_id = config.get("JOTFORM_LTJJC_INDUCTION_FORM_ID")

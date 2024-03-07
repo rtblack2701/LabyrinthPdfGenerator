@@ -5,8 +5,6 @@ from PyPDF2 import PdfReader, PdfWriter
 import json
 import os
 import io
-import shutil
-import requests
 
 def create_pdfs_from_json(json_file_path, output_directory, template_path):
     # Create the output directory if it doesn't exist
@@ -83,8 +81,10 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
                     can.drawString(330, 750, f"{start_date}")
                     can.drawString(75, 710, f"{full_name}")
                     can.drawString(440, 710, f"{date_of_birth}")
+                    can.setFont('Helvetica', 7)
                     can.drawString(360, 570, f"{medical_condition}")
                     can.drawString(430, 488, f"{allergy}")
+                    can.setFont('Helvetica', 9)
                     can.drawString(80, 470, f"{other_medical}")
                     can.drawString(160, 614, f"{contact_name} ({relationship})") # Emergency contact relationship
                     can.drawString(455, 270, f"{relationship}") # Declaration of relationship

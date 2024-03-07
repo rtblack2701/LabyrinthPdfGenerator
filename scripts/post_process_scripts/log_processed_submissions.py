@@ -1,5 +1,5 @@
 import json
-
+from jotform_api.configuration.config_loader import load_encrypted_config
 # Note list of processed submissions for each form in jotform_api/completed_submissions/completed_submissions.json
 def update_processed_submissions(processed_file_path, form_id, submission_ids):
     try:
@@ -33,7 +33,10 @@ def read_submission_ids(cleaned_data_file):
 
 processed_file_path = 'jotform_api/completed_submissions/completed_submissions.json' 
 submission_ids = read_submission_ids('jotform_api/data_files/submission_data.json') 
-form_id = 240652651606353
+key_path = "jotform_api/configuration/encryption_key.key"
+config_path = "jotform_api/configuration/encrypted_config_file.enc"
+config = load_encrypted_config(key_path, config_path)
+form_id = config.get("JOTFORM_LTJJC_INDUCTION_FORM_ID")
 
 update_processed_submissions(processed_file_path, str(form_id), submission_ids)
 

@@ -18,16 +18,14 @@ def check_for_empty_data(file_path):
 
 def main():
     start_time = time.time()
-    run_script(["python", "-m", "jotform_api.api_endpoints.get_form_submissions"])
-    run_script(["python", "-m", "scripts.object_builder"])
-    run_script(["python", "-m", "scripts.api_data_cleaner"])
+    run_script(["python", "-m", "jotform_api.api_endpoints.get_submissions"])
     
-    if check_for_empty_data('jotform_api/data_files/cleaned_submission_data.json'):
+    if check_for_empty_data('jotform_api/data_files/submission_data.json'):
         run_script(["python", "-m", "scripts.post_process_scripts.generated_file_removal"])
         print("No induction forms to process.")
         return
     
-    run_script(["python", "-m", "scripts.pdf_filler"])
+    run_script(["python", "-m", "scripts.generate_pdfs"])
     run_script(["python", "-m", "scripts.signature_overlay"])
     run_script(["python", "-m", "scripts.post_process_scripts.log_processed_submissions"])
     run_script(["python", "-m", "scripts.post_process_scripts.zip_email_pdfs"])

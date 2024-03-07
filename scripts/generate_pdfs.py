@@ -5,6 +5,8 @@ from PyPDF2 import PdfReader, PdfWriter
 import json
 import os
 import io
+import shutil
+import requests
 
 def create_pdfs_from_json(json_file_path, output_directory, template_path):
     # Create the output directory if it doesn't exist
@@ -128,6 +130,6 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
         print(f"Error creating PDFs: {e}")
 
 try:
-    create_pdfs_from_json('final_output.json', 'assets/pdfs/pre_signed', 'templates/InductionForm.pdf')
+    create_pdfs_from_json('jotform_api/data_files/submission_data.json', 'assets/pdfs/pre_signed', 'templates/InductionForm.pdf')
 except Exception as e:
     print(f"Error creating PDFs: {e}")

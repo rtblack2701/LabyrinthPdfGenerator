@@ -28,6 +28,22 @@ def format_address_fields(common_fields):
         common_fields['address'] = ""
         common_fields['postcode'] = ""
 
+# Define a directory to save the signature images
+signature_images_directory = 'assets/signature_images'
+if not os.path.exists(signature_images_directory):
+    os.makedirs(signature_images_directory)
+
+def save_image_from_url(url, save_path):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(save_path, 'wb') as f:
+                f.write(response.content)
+            return True
+        else:
+            return False
+    except Exception as e:
+        return False
 
 def extract_participant_data(submission):
     """
@@ -64,6 +80,14 @@ def extract_participant_data(submission):
         # "signature_image_path": download_and_save_signature_image(submission['answers']['signed']),
         "participants": []  # Placeholder for participant details
     }
+
+    signed_url = common_fields.get('signed')
+    if signed_url:
+        image_filename = f"{submission['id']}_signature.png"
+        save_path = os.path.join(signature_images_directory, image_filename)
+        if save_image_from_url(signed_url, save_path):
+            # If the image is successfully saved, update the path
+            common_fields['signature_image_path'] = save_path
 
     format_address_fields(common_fields)
 
@@ -178,7 +202,7 @@ def fetch_and_process_data(api_key, form_id):
 
     return processed_data
 
-def write_final_output(data, file_path='final_output.json'):
+def write_submission_output(data, file_path='jotform_api/data_files/submission_data.json'):
     """
     Writes the processed data to a file or another output form.
     """
@@ -188,13 +212,13 @@ def write_final_output(data, file_path='final_output.json'):
 
 # Main execution
 try:
-    key_path = "jotform_api/.configuration/clone_encryption_key.key"
+    key_path = "jotform_api/configuration/clone_encryption_key.key"
     config_path = "jotform_api/configuration/clone_encrypted_config_file.enc"
     config = load_encrypted_config(key_path, config_path)
     api_key = config.get("JOTFORM_API_KEY")
     form_id = config.get("JOTFORM_LTJJC_INDUCTION_FORM_ID")
 
     processed_data = fetch_and_process_data(api_key, form_id)
-    write_final_output(processed_data)
+    write_submission_output(processed_data)
 except Exception as e:
     print(f"Error: {e}")

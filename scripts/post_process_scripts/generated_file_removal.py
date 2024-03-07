@@ -23,6 +23,6 @@ directories_to_cleanup = [
 ]
 
 # List of file extensions to delete, e.g., ['.pdf', '.txt']
-file_extensions_to_delete = ['.PDF', '.json', '.png']
+file_extensions_to_delete = ['.PDF', 'pdf', '.json', '.png']
 
 cleanup_directories(directories_to_cleanup, file_extensions_to_delete)

@@ -2,6 +2,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from PyPDF2 import PdfReader, PdfWriter
+from datetime import datetime
 import json
 import os
 import io
@@ -34,6 +35,11 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
                 source = entry['source']
 
                 for i, participant in enumerate(entry['participants']):
+                    date_of_birth_str = participant['dob']  # Assuming 'dob' is in 'DD/MM/YYYY' format
+                    date_of_birth = datetime.strptime(date_of_birth_str, "%d/%m/%Y").date()
+                    today = datetime.now().date()
+                    age_years = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
+
                     full_name = participant['full_name']
                     date_of_birth = participant['dob']
                     medical_condition = participant.get('medical_condition', "NA")
@@ -101,9 +107,11 @@ def create_pdfs_from_json(json_file_path, output_directory, template_path):
                             can.rect(condition["x"], condition["y"], condition["width"], condition["height"])
 
                     can.setFont("Helvetica", 15)
-                    # Conditional rendering for media consent & conviction
+                    # Conditional rendering for media consent, conviction, and insurance
                     can.drawString(315, 355, "X") if media_consent.upper() == "YES" else can.drawString(362, 355, "X")
                     can.drawString(315, 329, "X") if convicted.upper() == "YES" else can.drawString(362, 329, "X")
+                    # Insurance selection based on age (5-15 = Junior, 16+ = Senior)
+                    can.drawString(162, 107, "X") if age_years < 16 else can.drawString(162, 89, "X")
                     
                     can.setFont("Helvetica", 9)
                     can.drawString(150, 315, f"{convicted_details}")

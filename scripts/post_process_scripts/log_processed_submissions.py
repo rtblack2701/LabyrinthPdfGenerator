@@ -24,7 +24,11 @@ def update_processed_submissions(processed_file_path, form_id, submission_ids):
 def read_submission_ids(cleaned_data_file):
     with open(cleaned_data_file, 'r') as file:
         data = json.load(file)
-    submission_ids = [item['submission_id'] for item in data]
+    submission_ids = []
+    # Assuming the JSON structure is a list of lists of dictionaries
+    for submission_list in data:  
+        for submission in submission_list:
+            submission_ids.append(submission['submission_id'])
     return submission_ids
 
 processed_file_path = 'jotform_api/completed_submissions/completed_submissions.json' 

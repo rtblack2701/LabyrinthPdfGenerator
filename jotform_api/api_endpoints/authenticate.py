@@ -1,5 +1,5 @@
 import requests
-from jotform_api.api_endpoints.config_loader import load_config
+from jotform_api.configuration.config_loader import load_config
 from jotform import JotformAPIClient
 
 

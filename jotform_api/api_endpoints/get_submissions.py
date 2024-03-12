@@ -212,8 +212,8 @@ def write_submission_output(data, file_path='jotform_api/data_files/submission_d
 
 # Main execution
 try:
-    key_path = "jotform_api/configuration/clone_encryption_key.key"
-    config_path = "jotform_api/configuration/clone_encrypted_config_file.enc"
+    key_path = "jotform_api/configuration/encryption_key.key"
+    config_path = "jotform_api/configuration/encrypted_config_file.enc"
     config = load_encrypted_config(key_path, config_path)
     api_key = config.get("JOTFORM_API_KEY")
     form_id = config.get("JOTFORM_LTJJC_INDUCTION_FORM_ID")

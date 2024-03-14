@@ -27,6 +27,7 @@ def main():
     
     run_script(["python", "-m", "scripts.generate_pdfs"])
     run_script(["python", "-m", "scripts.signature_overlay"])
+    run_script(["python", "-m", "scripts.submission_report"])
     run_script(["python", "-m", "scripts.post_process_scripts.log_processed_submissions"])
     run_script(["python", "-m", "scripts.post_process_scripts.zip_email_pdfs"])
     run_script(["python", "-m", "scripts.post_process_scripts.generated_file_removal"])

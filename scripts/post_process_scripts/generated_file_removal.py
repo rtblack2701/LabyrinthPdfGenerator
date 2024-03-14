@@ -97,6 +97,7 @@ if __name__ == "__main__":
         'assets/signature_images',
         'assets/pdfs/pre_signed',
         'assets/pdfs/post_signed',
+        'assets/pdfs/summary_report',
     ]
     file_extensions_to_delete = ['.PDF', '.pdf', '.json', '.png']
 

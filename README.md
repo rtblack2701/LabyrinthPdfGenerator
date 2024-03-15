@@ -19,14 +19,10 @@ Authenticate with Jotform API:
 **Run the `main` script to generate the PDFs:
 The `main` script will call the following scripts in order:**
 
-1. Get the form submission data:
-    `jotform_api.api_endpoints.get_form_submissions`
-2. Build the JSON file:
-    `scripts/object_builder`
-3. Clean the JSON file:
-    `scripts/api_data_cleaner`
-4. Generate the PDFs:
-    `scripts/pdf_filler`
+1. Get the form submission data and save it to a cleaned JSON file:
+    `jotform_api.api_endpoints.get_submissions`
+2. Generate the PDFs from the cleaned JSON file:
+    `scripts/generate_pdfs`
 5. Overlay the PDFs with parent/guardian and coach signatures:
     `scripts/signature_overlay`
 
@@ -35,7 +31,7 @@ The `main` script will call the following scripts in order:**
     `scripts.post_process_scripts.log_processed_submissions`
 2. Zip the PDFs
     `scripts.post_process_scripts.zip_email_pdfs`
-3. Clean up the directories
+3. Clean up the directories & log deleted files
     `scripts.post_process_scripts.generated_file_removal`
 
 ## Manual Processing
